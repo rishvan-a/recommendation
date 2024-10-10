@@ -1,50 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recommendation Website</title>
-  <link rel="stylesheet" href="s.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    <link rel="stylesheet" href="su.css">
 </head>
 <body>
-  <header>
-    <h1>Recommendation Hub</h1>
-    <nav>
-      <ul>
-        <li><a href="#movies" class="tab active" onclick="openTab(event, 'movies')">Movies</a></li>
-        <li><a href="#songs" class="tab" onclick="openTab(event, 'songs')">Songs</a></li>
-        <li><a href="#games" class="tab" onclick="openTab(event, 'games')">Games</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header>
+        <h1>Selective</h1>
+        <nav>
+            <ul>
+                <li><a href="#movies" class="tab active" onclick="showTab('movies')">Movies</a></li>
+                <li><a href="#songs" class="tab" onclick="showTab('songs')">Songs</a></li>
+                <li><a href="#games" class="tab" onclick="showTab('games')">Games</a></li>
+            </ul>
+            <input type="text" id="search" placeholder="Search..." />
+        </nav>
+    </header>
 
-  <main>
-    <div id="movies" class="tab-content active">
-      <h2>Movie Recommendations</h2>
-      <input type="text" id="movie-search" placeholder="Search for movies..." oninput="searchMovies()">
-      <div class="recommendations" id="movie-recommendations"></div>
-      <div id="movie-pagination" class="pagination"></div>
-    </div>
+    <main>
+        <section id="movies" class="tab-content active">
+            <h2>Popular Movies</h2>
+            <div class="recommendations" id="movie-recommendations">Loading...</div>
+        </section>
 
-    <div id="songs" class="tab-content">
-      <h2>Song Recommendations</h2>
-      <input type="text" id="song-search" placeholder="Search for songs..." oninput="searchSongs()">
-      <div class="recommendations" id="song-recommendations"></div>
-      <div id="song-pagination" class="pagination"></div>
-    </div>
+        <section id="songs" class="tab-content">
+            <h2>Popular Songs</h2>
+            <div class="recommendations" id="song-recommendations">Loading...</div>
+        </section>
 
-    <div id="games" class="tab-content">
-      <h2>Game Recommendations</h2>
-      <input type="text" id="game-search" placeholder="Search for games..." oninput="searchGames()">
-      <div class="recommendations" id="game-recommendations"></div>
-      <div id="game-pagination" class="pagination"></div>
-    </div>
-  </main>
+        <section id="games" class="tab-content">
+            <h2>Popular Games</h2>
+            <div class="recommendations" id="game-recommendations">Loading...</div>
+        </section>
 
-  <footer>
-    <p>&copy; 2024 Recommendation Hub</p>
-  </footer>
+        <!-- New Details Section -->
+        <section id="details" class="details">
+            <h2>Details</h2>
+            <div id="detail-content">Select an item to see the details.</div>
+        </section>
+    </main>
 
-  <script src="s.js"></script>
+    <footer>
+        <p>&copy; 2024 Media Recommendations</p>
+    </footer>
+
+    <script src="su.js"></script>
 </body>
 </html>
