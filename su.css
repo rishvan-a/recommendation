@@ -1,20 +1,24 @@
+/* su.css */
+
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f0f0f0;
+    background-color: #d6d0d0;
     margin: 0;
     padding: 0;
+    line-height: 1.6; /* Improved line spacing for readability */
 }
 
 header {
-    background-color: #444;
+    background-color: #333; /* Darker shade for a modern look */
     color: #fff;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
 }
 
 header h1 {
     margin: 0;
-    font-size: 2rem;
+    font-size: 2.5rem; /* Larger font size */
 }
 
 nav ul {
@@ -28,59 +32,82 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff;
+    color: #fcf5f5;
     text-decoration: none;
+    transition: color 0.3s; /* Smooth transition on hover */
+}
+
+nav ul li a:hover {
+    color: #ffeb3b; /* Highlight color on hover */
 }
 
 #search {
     margin-top: 10px;
-    padding: 10px;
+    padding: 12px; /* Slightly increased padding */
     width: 80%;
-    max-width: 400px;
+    max-width: 450px; /* Wider input field */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 main {
     padding: 30px;
 }
 
+.filters {
+    margin: 15px 0; /* Increased margin for better spacing */
+}
+
+.filters select {
+    padding: 10px; /* Increased padding */
+    margin-right: 15px; /* More spacing between selects */
+    font-size: 1rem;
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light border */
+}
+
 h2 {
-    color: #444;
-    font-size: 1.8rem;
+    color: #493232;
+    font-size: 2rem; /* Increased font size for headings */
+    margin-bottom: 10px; /* Spacing below headings */
 }
 
 .recommendations {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Adjusted for better responsiveness */
+    gap: 20px; /* Reduced gap for a tighter grid */
 }
 
 .recommendation-item {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #fff; /* Lighter background for items */
+    border: 1px solid #e0e0e0; /* Lighter border */
     padding: 15px;
     border-radius: 10px;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .recommendation-item:hover {
     transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(5, 5, 5, 0.2); /* Enhanced shadow on hover */
 }
 
 .recommendation-item img {
     max-width: 100%;
-    border-radius: 10px;
+    border-radius: 8px; /* Adjusted border radius */
 }
 
 footer {
     text-align: center;
     padding: 15px 0;
-    background-color: #444;
-    color: #fff;
+    background-color: #444; /* Darker footer for contrast */
+    color: #fdfbfb;
     position: relative;
     width: 100%;
     bottom: 0;
+    margin-top: 20px; /* Space between footer and content above */
 }
 
 .tab-content {
@@ -93,4 +120,69 @@ footer {
 
 .tab.active {
     font-weight: bold;
+}
+
+/* Loading and Error Styles */
+.loading {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Modal styles */
+#detail-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+}
+
+/* Modal content */
+#detail-content {
+    background-color: #fff; /* Lighter background for contrast */
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Responsive width */
+    max-width: 600px; /* Maximum width for large screens */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Ensure images fit well */
+#detail-content img {
+    width: 100%; /* Responsive width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 3000px; /* Optional: limit max height */
+    object-fit: cover; /* Cover ensures the image covers the area */
+    border-radius: 4px; /* Optional: round corners */
+}
+
+/* Close button styles */
+#close-modal {
+    color: #aaa;
+    float: right; /* Position to the right */
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: -30px; /* Adjusts the vertical position */
+    margin-right: 320px; /* Adjusts the horizontal position */
+    cursor: pointer; /* Change cursor on hover */
+}
+#close-modal:hover,
+#close-modal:focus {
+    color: rgb(207, 11, 11);
+    text-decoration: none;
+    cursor: pointer;
 }
