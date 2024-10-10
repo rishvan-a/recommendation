@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recommendations</title>
+    <title>Selective</title>
     <link rel="stylesheet" href="su.css">
 </head>
 <body>
@@ -20,26 +20,132 @@
     </header>
 
     <main>
+        <!-- Movie Section with Filters -->
         <section id="movies" class="tab-content active">
             <h2>Popular Movies</h2>
+            <div class="filters">
+                <select id="movie-genre" onchange="applyMovieFilters()">
+                    <option value="">All Genres</option>
+                    <option value="28">Action</option>
+                    <option value="12">Adventure</option>
+                    <option value="16">Animation</option>
+                    <option value="1">Biography</option>
+                    <option value="35">Comedy</option>
+                    <option value="80">Crime</option>
+                    <option value="18">Drama</option>
+                    <option value="14">Fantasy</option>
+                    <option value="36">Historical</option>
+                    <option value="27">Horror</option>
+                    <option value="10402">Musical</option>
+                    <option value="9648">Mystery</option>
+                    <option value="10749">Romance</option>
+                    <option value="878">Science Fiction</option>
+                    <option value="37">Western</option>
+                    <option value="10752">War</option>
+                    <option value="10770">TV Movie</option>
+                </select>
+
+                <select id="movie-year" onchange="applyMovieFilters()">
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <!-- Add more years as needed -->
+                </select>
+
+                <select id="movie-language" onchange="applyMovieFilters()">
+                    <option value="">All Languages</option>
+                    <option value="en">English</option>
+                    <option value="ta">Tamil</option>
+                    <option value="ml">Malayalam</option>
+                    <option value="hi">Hindi</option>
+                    <!-- Add more languages as needed -->
+                </select>
+            </div>
             <div class="recommendations" id="movie-recommendations">Loading...</div>
+            <div id="movie-loading" class="loading" style="display:none;">Loading movies...</div>
+            <div id="movie-error" class="error" style="display:none;"></div>
         </section>
 
+        <!-- Song Section with Filters -->
         <section id="songs" class="tab-content">
             <h2>Popular Songs</h2>
+            <div class="filters">
+                <select id="song-genre" onchange="applySongFilters()">
+                    <option value="">All Genres</option>
+                    <option value="film">Film Songs</option>
+                    <option value="classical">Classical</option>
+                    <option value="folk">Folk</option>
+                    <option value="pop">Pop</option>
+                    <option value="rock">Rock</option>
+                    <option value="hiphop">Hip Hop/Rap</option>
+                    <option value="devotional">Devotional</option>
+                    <option value="romantic">Romantic</option>
+                    <option value="melody">Melody</option>
+                    <option value="dance">Dance</option>
+                    <option value="trance">Trance</option>
+                    <option value="indie">Indie</option>
+                    <option value="ghazal">Ghazal</option>
+                </select>
+
+                <select id="song-language" onchange="applySongFilters()">
+                    <option value="">All Languages</option>
+                    <option value="en">English</option>
+                    <option value="ta">Tamil</option>
+                    <option value="ml">Malayalam</option>
+                    <option value="hi">Hindi</option>
+                    <option value="te">Telugu</option>
+                    <option value="kn">Kannada</option>
+                    <option value="bn">Bengali</option>
+                    <!-- Add more languages as needed -->
+                </select>
+            </div>
             <div class="recommendations" id="song-recommendations">Loading...</div>
+            <div id="song-loading" class="loading" style="display:none;">Loading songs...</div>
+            <div id="song-error" class="error" style="display:none;"></div>
         </section>
 
+        <!-- Game Section with Filters -->
         <section id="games" class="tab-content">
             <h2>Popular Games</h2>
+            <div class="filters">
+                <select id="game-genre" onchange="applyGameFilters()">
+                    <option value="">All Genres</option>
+                    <option value="action">Action</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="simulation">Simulation</option>
+                    <option value="strategy">Strategy</option>
+                    <option value="sports">Sports</option>
+                    <option value="racing">Racing</option>
+                    <option value="puzzle">Puzzle</option>
+                    <option value="platformer">Platformer</option>
+                    <option value="fighting">Fighting</option>
+                </select>
+            </div>
             <div class="recommendations" id="game-recommendations">Loading...</div>
+            <div id="game-loading" class="loading" style="display:none;">Loading games...</div>
+            <div id="game-error" class="error" style="display:none;"></div>
         </section>
 
-        <!-- New Details Section -->
-        <section id="details" class="details">
-            <h2>Details</h2>
-            <div id="detail-content">Select an item to see the details.</div>
-        </section>
+        <!-- Modal for displaying details -->
+        <div id="detail-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="close-modal">&times;</span>
+                <div id="detail-content"></div>
+            </div>
+        </div>
+
     </main>
 
     <footer>
