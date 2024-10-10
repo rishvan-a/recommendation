@@ -1,4 +1,5 @@
-// API Keys
+// su.js
+
 const TMDB_API_KEY = '3ce92aa806b4c527acf526324f6cd8e9';
 const SPOTIFY_CLIENT_ID = 'aa174295d12a44268ce575f5da0a41c0';
 const SPOTIFY_CLIENT_SECRET = '970750adf4d140b9b3befa40289f7cbc';
@@ -14,62 +15,125 @@ async function getSpotifyToken() {
         },
         body: 'grant_type=client_credentials'
     });
-    if (!response.ok) throw new Error('Failed to fetch Spotify token');
     const data = await response.json();
     return data.access_token;
 }
 
-// Fetch Movie Recommendations using TMDb API
-async function fetchMovieRecommendations(query = '') {
-    try {
-        const url = query 
-            ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(query)}`
-            : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`;
-        
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch movie recommendations');
-        const data = await response.json();
-        displayRecommendations(data.results, 'movie-recommendations');
-    } catch (error) {
-        showError('movie-recommendations', error.message);
-    }
+// Apply Movie Filters
+async function applyMovieFilters() {
+    const genre = document.getElementById('movie-genre').value;
+    const year = document.getElementById('movie-year').value;
+    const language = document.getElementById('movie-language').value;
+
+    const queryParams = [];
+    if (genre) queryParams.push(`with_genres=${genre}`);
+    if (year) queryParams.push(`primary_release_year=${year}`);
+    if (language) queryParams.push(`with_original_language=${language}`);
+
+    const queryString = queryParams.length ? `&${queryParams.join('&')}` : '';
+    await fetchMovieRecommendations(queryString);
 }
 
-// Fetch Song Recommendations using Spotify API
+// Fetch Movie Recommendations with Filters
+async function fetchMovieRecommendations(filters = '') {
+    const searchTerm = document.getElementById('search').value;
+    const url = searchTerm 
+        ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(searchTerm)}`
+        : `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=en-US${filters}`;
+    
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch movie recommendations');
+    const data = await response.json();
+    displayRecommendations(data.results, 'movie-recommendations');
+}
+
+// Apply Song Filters
+async function applySongFilters() {
+    const genre = document.getElementById('song-genre').value;
+    const language = document.getElementById('song-language').value;
+
+    const query = genre ? `&q=genre:${genre}` : '';
+    const langFilter = language ? `&q=language:${language}` : ''; // Construct language filter
+
+    await fetchSongRecommendations(query + langFilter);
+}
+
+// Fetch Song Recommendations with Filters or Search
 async function fetchSongRecommendations(query = '') {
-    try {
-        const token = await getSpotifyToken();
-        const url = query 
-            ? `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`
-            : `https://api.spotify.com/v1/playlists/37i9dQZF1DXcBWIGoYBM5M/tracks`; // Default playlist
+    const token = await getSpotifyToken();
+    const searchTerm = document.getElementById('search').value;
 
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch song recommendations');
-        const data = await response.json();
-        displayRecommendations(data.items || data.tracks.items, 'song-recommendations', 'track');
-    } catch (error) {
-        showError('song-recommendations', error.message);
-    }
+    const url = searchTerm 
+        ? `https://api.spotify.com/v1/search?type=track&q=${encodeURIComponent(searchTerm)}&limit=10`
+        : `https://api.spotify.com/v1/search?type=track${query}`;
+
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+    if (!response.ok) throw new Error('Failed to fetch song recommendations');
+    const data = await response.json();
+    displayRecommendations(data.tracks.items, 'song-recommendations', 'track');
 }
 
-// Fetch Game Recommendations using RAWG API
+// Apply Game Filters
+async function applyGameFilters() {
+    const genre = document.getElementById('game-genre').value;
+    const query = genre ? `&genres=${genre}` : '';
+    await fetchGameRecommendations(query);
+}
+
+// Fetch Game Recommendations with Filters
 async function fetchGameRecommendations(query = '') {
-    try {
-        const url = query 
-            ? `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&page_size=10&search=${encodeURIComponent(query)}`
-            : `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&page_size=10`;
-        
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Failed to fetch game recommendations');
-        const data = await response.json();
-        displayRecommendations(data.results, 'game-recommendations');
-    } catch (error) {
-        showError('game-recommendations', error.message);
+    const searchTerm = document.getElementById('search').value;
+    const url = searchTerm 
+        ? `https://api.rawg.io/api/games?key=${RAWG_API_KEY}&page_size=10&search=${encodeURIComponent(searchTerm)}`
+        : `https://api.rawg.io/api/games?key=${RAWG_API_KEY}${query}&page_size=10`;
+    
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch game recommendations');
+    const data = await response.json();
+    displayRecommendations(data.results, 'game-recommendations');
+}
+
+// Display Recommendations
+function displayRecommendations(items, elementId, type = 'media') {
+    const container = document.getElementById(elementId);
+    container.innerHTML = '';
+
+    if (items.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
+        return;
     }
+
+    items.forEach(item => {
+        const recommendationDiv = document.createElement('div');
+        recommendationDiv.classList.add('recommendation-item');
+        
+        let imageUrl;
+
+        // Handle image URL based on type
+        if (type === 'track') {
+            imageUrl = item.album.images[0]?.url || 'default_image_url.jpg'; // Added fallback image
+            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'track'));
+        } else if (item.poster_path) {
+            imageUrl = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
+            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'movie'));
+        } else if (item.background_image) {
+            imageUrl = item.background_image;
+            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'game'));
+        } else {
+            imageUrl = 'default_image_url.jpg'; // Placeholder for missing image
+        }
+
+        recommendationDiv.innerHTML = `
+          <img src="${imageUrl}" alt="${item.name || item.title || 'Media'}">
+          <h3>${item.name || item.title || 'Untitled'}</h3>
+        `;
+
+        container.appendChild(recommendationDiv);
+    });
 }
 
 // Fetch detailed information for selected item
@@ -78,7 +142,7 @@ async function fetchDetail(item, type) {
     try {
         if (type === 'track') {
             const token = await getSpotifyToken();
-            const response = await fetch(`https://api.spotify.com/v1/tracks/${item.track.id}`, {
+            const response = await fetch(`https://api.spotify.com/v1/tracks/${item.id}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -97,43 +161,41 @@ async function fetchDetail(item, type) {
     }
 }
 
-// Display Recommendations in the DOM
-function displayRecommendations(items, elementId, type = 'media') {
-    const container = document.getElementById(elementId);
-    container.innerHTML = '';
+// Show Modal with Detailed Information
+function showModal() {
+    const modal = document.getElementById('detail-modal');
+    modal.style.display = 'block';
+}
 
-    if (items.length === 0) {
-        container.innerHTML = '<p>No results found.</p>';
-        return;
-    }
+// Hide Modal
+function closeModal() {
+    const modal = document.getElementById('detail-modal');
+    modal.style.display = 'none';
+}
 
-    items.forEach(item => {
-        const recommendationDiv = document.createElement('div');
-        recommendationDiv.classList.add('recommendation-item');
-        
-        let imageUrl;
-
-        // Handle image URL based on type
+// Fetch detailed information for selected item
+async function fetchDetail(item, type) {
+    let detailData;
+    try {
         if (type === 'track') {
-            imageUrl = item.track?.album?.images?.[0]?.url || 'default_image_url.jpg';
-            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'track'));
-        } else if (item.poster_path) {
-            imageUrl = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
-            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'movie'));
-        } else if (item.background_image) {
-            imageUrl = item.background_image;
-            recommendationDiv.addEventListener('click', () => fetchDetail(item, 'game'));
-        } else {
-            imageUrl = 'default_image_url.jpg'; // Placeholder for missing image
+            const token = await getSpotifyToken();
+            const response = await fetch(`https://api.spotify.com/v1/tracks/${item.id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            detailData = await response.json();
+        } else if (type === 'movie') {
+            const response = await fetch(`https://api.themoviedb.org/3/movie/${item.id}?api_key=${TMDB_API_KEY}&language=en-US`);
+            detailData = await response.json();
+        } else if (type === 'game') {
+            const response = await fetch(`https://api.rawg.io/api/games/${item.id}?key=${RAWG_API_KEY}`);
+            detailData = await response.json();
         }
-
-        recommendationDiv.innerHTML = `
-          <img src="${imageUrl}" alt="${item.title || item.name || 'Media'}">
-          <h3>${item.title || item.name || 'Untitled'}</h3>
-        `;
-
-        container.appendChild(recommendationDiv);
-    });
+        displayDetail(detailData, type);
+    } catch (error) {
+        showError('detail-content', 'Failed to load details. Please try again later.');
+    }
 }
 
 // Display Detailed Information
@@ -142,10 +204,11 @@ function displayDetail(data, type) {
     detailContent.innerHTML = '';
 
     if (type === 'track') {
+        const imageUrl = data.album.images[0]?.url || 'default_image_url.jpg';
         detailContent.innerHTML = `
             <h3>${data.name}</h3>
             <p>Artist: ${data.artists.map(artist => artist.name).join(', ')}</p>
-            <img src="${data.album.images[0]?.url || 'default_image_url.jpg'}" alt="${data.name}">
+            <img src="${imageUrl}" alt="${data.name}">
             <p>Album: ${data.album.name}</p>
             <p>Release Date: ${data.album.release_date}</p>
             <p>Duration: ${Math.floor(data.duration_ms / 60000)} min ${Math.round((data.duration_ms % 60000) / 1000)} sec</p>
@@ -166,7 +229,21 @@ function displayDetail(data, type) {
             <img src="${data.background_image || 'default_image_url.jpg'}" alt="${data.name}">
         `;
     }
+
+    showModal(); // Show the modal after populating it
 }
+
+// Close the modal when the close button is clicked
+document.getElementById('close-modal').addEventListener('click', closeModal);
+
+// Close the modal when clicking outside of the modal
+window.onclick = function(event) {
+    const modal = document.getElementById('detail-modal');
+    if (event.target === modal) {
+        closeModal();
+    }
+};
+
 
 // Show Error if API call fails
 function showError(elementId, message) {
@@ -203,15 +280,17 @@ document.getElementById('search').addEventListener('input', async (event) => {
 
     // Fetch recommendations based on the search term
     await Promise.all([
-        fetchMovieRecommendations(searchTerm),
-        fetchSongRecommendations(searchTerm),
-        fetchGameRecommendations(searchTerm)
+        fetchMovieRecommendations(),
+        fetchSongRecommendations(),
+        fetchGameRecommendations()
     ]);
 });
 
 // Load Recommendations on Page Load
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchMovieRecommendations();
-    await fetchSongRecommendations(); // Fetch songs directly on load
-    await fetchGameRecommendations();
+    await Promise.all([
+        fetchMovieRecommendations(),
+        fetchSongRecommendations(),
+        fetchGameRecommendations()
+    ]);
 });
