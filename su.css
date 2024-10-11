@@ -37,8 +37,10 @@ nav ul li a {
     transition: color 0.3s; /* Smooth transition on hover */
 }
 
-nav ul li a:hover {
+nav ul li a:hover,
+nav ul li a:focus {
     color: #ffeb3b; /* Highlight color on hover */
+    outline: none; /* Remove default outline */
 }
 
 #search {
@@ -49,6 +51,12 @@ nav ul li a:hover {
     border-radius: 5px; /* Rounded corners */
     border: 1px solid #ccc; /* Light border */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: box-shadow 0.3s; /* Smooth transition on focus */
+}
+
+#search:focus {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhanced shadow on focus */
+    outline: none; /* Remove default outline */
 }
 
 main {
@@ -65,6 +73,12 @@ main {
     font-size: 1rem;
     border-radius: 5px; /* Rounded corners */
     border: 1px solid #ccc; /* Light border */
+    transition: border-color 0.3s; /* Smooth transition on focus */
+}
+
+.filters select:focus {
+    border-color: #ffeb3b; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
 }
 
 h2 {
@@ -89,9 +103,11 @@ h2 {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.recommendation-item:hover {
+.recommendation-item:hover,
+.recommendation-item:focus {
     transform: scale(1.05);
     box-shadow: 0 10px 20px rgba(5, 5, 5, 0.2); /* Enhanced shadow on hover */
+    outline: none; /* Remove default outline */
 }
 
 .recommendation-item img {
@@ -179,10 +195,13 @@ footer {
     margin-top: -30px; /* Adjusts the vertical position */
     margin-right: 320px; /* Adjusts the horizontal position */
     cursor: pointer; /* Change cursor on hover */
+    transition: color 0.3s; /* Smooth transition on hover */
 }
+
 #close-modal:hover,
 #close-modal:focus {
     color: rgb(207, 11, 11);
     text-decoration: none;
     cursor: pointer;
+    outline: none; /* Remove default outline */
 }
