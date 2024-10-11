@@ -157,7 +157,7 @@ async function fetchDetail(item, type) {
         }
         displayDetail(detailData, type);
     } catch (error) {
-        document.getElementById('detail-content').innerHTML = '<p>Failed to load details. Please try again later.</p>';
+        showError('detail-content', 'Failed to load details. Please try again later.');
     }
 }
 
@@ -171,31 +171,6 @@ function showModal() {
 function closeModal() {
     const modal = document.getElementById('detail-modal');
     modal.style.display = 'none';
-}
-
-// Fetch detailed information for selected item
-async function fetchDetail(item, type) {
-    let detailData;
-    try {
-        if (type === 'track') {
-            const token = await getSpotifyToken();
-            const response = await fetch(`https://api.spotify.com/v1/tracks/${item.id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            detailData = await response.json();
-        } else if (type === 'movie') {
-            const response = await fetch(`https://api.themoviedb.org/3/movie/${item.id}?api_key=${TMDB_API_KEY}&language=en-US`);
-            detailData = await response.json();
-        } else if (type === 'game') {
-            const response = await fetch(`https://api.rawg.io/api/games/${item.id}?key=${RAWG_API_KEY}`);
-            detailData = await response.json();
-        }
-        displayDetail(detailData, type);
-    } catch (error) {
-        showError('detail-content', 'Failed to load details. Please try again later.');
-    }
 }
 
 // Display Detailed Information
@@ -243,7 +218,6 @@ window.onclick = function(event) {
         closeModal();
     }
 };
-
 
 // Show Error if API call fails
 function showError(elementId, message) {
