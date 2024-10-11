@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A media recommendation platform for movies, songs, and games.">
     <title>Selective</title>
     <link rel="stylesheet" href="su.css">
 </head>
@@ -15,21 +16,20 @@
                 <li><a href="#songs" class="tab" onclick="showTab('songs')">Songs</a></li>
                 <li><a href="#games" class="tab" onclick="showTab('games')">Games</a></li>
             </ul>
-            <input type="text" id="search" placeholder="Search..." />
+            <input type="text" id="search" placeholder="Search..." aria-label="Search" />
         </nav>
     </header>
-
     <main>
         <!-- Movie Section with Filters -->
         <section id="movies" class="tab-content active">
             <h2>Popular Movies</h2>
             <div class="filters">
+                
                 <select id="movie-genre" onchange="applyMovieFilters()">
                     <option value="">All Genres</option>
                     <option value="28">Action</option>
                     <option value="12">Adventure</option>
                     <option value="16">Animation</option>
-                    <option value="1">Biography</option>
                     <option value="35">Comedy</option>
                     <option value="80">Crime</option>
                     <option value="18">Drama</option>
@@ -61,16 +61,15 @@
                     <option value="2013">2013</option>
                     <option value="2012">2012</option>
                     <option value="2011">2011</option>
-                    <!-- Add more years as needed -->
                 </select>
 
+              
                 <select id="movie-language" onchange="applyMovieFilters()">
                     <option value="">All Languages</option>
                     <option value="en">English</option>
                     <option value="ta">Tamil</option>
                     <option value="ml">Malayalam</option>
                     <option value="hi">Hindi</option>
-                    <!-- Add more languages as needed -->
                 </select>
             </div>
             <div class="recommendations" id="movie-recommendations">Loading...</div>
@@ -82,6 +81,7 @@
         <section id="songs" class="tab-content">
             <h2>Popular Songs</h2>
             <div class="filters">
+                
                 <select id="song-genre" onchange="applySongFilters()">
                     <option value="">All Genres</option>
                     <option value="film">Film Songs</option>
@@ -99,6 +99,7 @@
                     <option value="ghazal">Ghazal</option>
                 </select>
 
+                
                 <select id="song-language" onchange="applySongFilters()">
                     <option value="">All Languages</option>
                     <option value="en">English</option>
@@ -108,7 +109,6 @@
                     <option value="te">Telugu</option>
                     <option value="kn">Kannada</option>
                     <option value="bn">Bengali</option>
-                    <!-- Add more languages as needed -->
                 </select>
             </div>
             <div class="recommendations" id="song-recommendations">Loading...</div>
@@ -120,6 +120,7 @@
         <section id="games" class="tab-content">
             <h2>Popular Games</h2>
             <div class="filters">
+               
                 <select id="game-genre" onchange="applyGameFilters()">
                     <option value="">All Genres</option>
                     <option value="action">Action</option>
@@ -145,13 +146,14 @@
                 <div id="detail-content"></div>
             </div>
         </div>
-
     </main>
-
     <footer>
-        <p>&copy; 2024 Media Recommendations</p>
+        <p>&copy; <span id="current-year"></span> Media Recommendations</p>
     </footer>
-
     <script src="su.js"></script>
+    <script>
+        // Set the current year in the footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>
